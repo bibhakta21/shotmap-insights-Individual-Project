@@ -272,4 +272,45 @@ with xg_col2:
     st.markdown('<div class="chart-container">', unsafe_allow_html=True)
     st.markdown('<h3 class="subsection-header">Distance vs xG Relationship</h3>', unsafe_allow_html=True)
     
-   
+    # Interactive scatter plot
+    fig_scatter = px.scatter(
+        filtered_df, 
+        x='distance_to_goal', 
+        y='shot.statsbomb_xg',
+        color='is_goal',
+        color_discrete_map={0: '#ef4444', 1: '#10b981'},
+        hover_data={
+            'shot.outcome.name': True,
+            'distance_to_goal': ':.1f',
+            'shot.statsbomb_xg': ':.3f'
+        },
+        labels={
+            'distance_to_goal': 'Distance to Goal (yards)',
+            'shot.statsbomb_xg': 'Expected Goals (xG)',
+            'is_goal': 'Goal Scored'
+        },
+        trendline="ols",
+        trendline_color_override="#64748b"
+    )
+    
+    fig_scatter.update_layout(
+        title="",
+        template="plotly_white",
+        height=400,
+        font=dict(family="Inter", size=12),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+            title=""
+        )
+    )
+    
+    fig_scatter.update_traces(marker=dict(size=6, opacity=0.7))
+    st.plotly_chart(fig_scatter, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
