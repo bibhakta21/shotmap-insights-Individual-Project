@@ -141,3 +141,15 @@ def load_data():
 
 df = load_data()
 
+# sidebar 
+st.sidebar.markdown('<h2 class="sidebar-header">🎯 Dashboard Controls</h2>', unsafe_allow_html=True)
+
+team_list = ["All Teams"] + sorted(df['team.name'].dropna().unique().tolist())
+default_index = team_list.index("England") if "England" in team_list else 0
+team_filter = st.sidebar.selectbox(
+    "🏆 Select Team", 
+    team_list, 
+    index=default_index,
+    help="Filter data by specific team or view all teams"
+)
+
