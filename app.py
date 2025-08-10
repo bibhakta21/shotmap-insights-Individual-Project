@@ -141,7 +141,7 @@ def load_data():
 
 df = load_data()
 
-# sidebar 
+# Enhanced sidebar with icons and styling
 st.sidebar.markdown('<h2 class="sidebar-header">🎯 Dashboard Controls</h2>', unsafe_allow_html=True)
 
 team_list = ["All Teams"] + sorted(df['team.name'].dropna().unique().tolist())
@@ -151,5 +151,13 @@ team_filter = st.sidebar.selectbox(
     team_list, 
     index=default_index,
     help="Filter data by specific team or view all teams"
+)
+
+# filter options
+outcome_filter = st.sidebar.multiselect(
+    "🎯 Shot Outcomes",
+    options=df['shot.outcome.name'].unique(),
+    default=df['shot.outcome.name'].unique(),
+    help="Filter by shot outcomes"
 )
 
