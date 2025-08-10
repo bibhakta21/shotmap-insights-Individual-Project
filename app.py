@@ -180,3 +180,50 @@ filtered_df = filtered_df[
     (filtered_df['shot.statsbomb_xg'] <= xg_range[1])
 ]
 
+# Shot Location Visualizations
+st.markdown('<div class="section-header">🗺️ Shot Location Analysis</div>', unsafe_allow_html=True)
+
+pitch_col1, pitch_col2 = st.columns(2)
+
+with pitch_col1:
+    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+    st.markdown('<h3 class="subsection-header">Shot Density Heatmap</h3>', unsafe_allow_html=True)
+    
+    # Create matplotlib figure with custom styling
+    pitch = Pitch(pitch_type='statsbomb', pitch_color='#f8fafc', line_color='#334155', linewidth=2)
+    fig, ax = pitch.draw(figsize=(8, 6))
+    pitch.kdeplot(filtered_df['x'], filtered_df['y'], ax=ax, fill=True, 
+                  cmap='RdYlGn_r', thresh=0.05, bw_adjust=0.9, alpha=0.8)
+    ax.set_title("", fontsize=0)  # Remove default title
+    plt.tight_layout()
+    st.pyplot(fig, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with pitch_col2:
+    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+    st.markdown('<h3 class="subsection-header">Shot Outcome Distribution</h3>', unsafe_allow_html=True)
+    
+    pitch2 = Pitch(pitch_type='statsbomb', pitch_color='#f8fafc', line_color='#334155', linewidth=2)
+    fig2, ax2 = pitch2.draw(figsize=(8, 6))
+    
+    # Enhanced outcome colors
+    outcome_styles = {
+        'Saved': ('#3b82f6', 0.6),      # Blue
+        'Blocked': ('#f59e0b', 0.6),     # Orange  
+        'Off T': ('#ef4444', 0.4),       # Red
+        'Missed': ('#6b7280', 0.4),      # Gray
+        'Goal': ('#10b981', 0.9)         # Green
+    }
+    
+    for outcome, (color, alpha) in outcome_styles.items():
+        sub_df = filtered_df[filtered_df['shot.outcome.name'] == outcome]
+        if len(sub_df) > 0:
+            pitch2.scatter(sub_df['x'], sub_df['y'], ax=ax2, color=color, 
+                          alpha=alpha, s=20, label=outcome, edgecolors='white', linewidth=0.5)
+    
+    ax2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5, 
+               frameon=False, fontsize=10)
+    plt.tight_layout()
+    st.pyplot(fig2, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
