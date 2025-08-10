@@ -314,3 +314,80 @@ with xg_col2:
     st.plotly_chart(fig_scatter, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
+# Pressure Analysis
+st.markdown('<div class="section-header">💪 Performance Under Pressure</div>', unsafe_allow_html=True)
+
+pressure_col1, pressure_col2 = st.columns(2)
+
+filtered_df['pressure_label'] = filtered_df['under_pressure'].apply(
+    lambda x: "Under Pressure" if x else "Not Under Pressure"
+)
+
+with pressure_col1:
+    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+    st.markdown('<h3 class="subsection-header">Goal Conversion Rate</h3>', unsafe_allow_html=True)
+    
+    goal_rate = filtered_df.groupby('pressure_label')['is_goal'].agg(['mean', 'count']).reset_index()
+    goal_rate.columns = ['pressure_label', 'goal_rate', 'shot_count']
+    
+    fig_bar = px.bar(
+        goal_rate, 
+        x='pressure_label', 
+        y='goal_rate',
+        color='goal_rate',
+        color_continuous_scale='RdYlGn',
+        text=[f'{rate:.1%}<br>({count} shots)' for rate, count in zip(goal_rate['goal_rate'], goal_rate['shot_count'])],
+        labels={
+            'pressure_label': 'Pressure Situation',
+            'goal_rate': 'Goal Conversion Rate'
+        }
+    )
+    
+    fig_bar.update_layout(
+        title="",
+        template="plotly_white",
+        height=400,
+        showlegend=False,
+        font=dict(family="Inter", size=12),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        yaxis=dict(tickformat='.1%')
+    )
+    
+    fig_bar.update_traces(textposition='outside')
+    st.plotly_chart(fig_bar, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with pressure_col2:
+    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+    st.markdown('<h3 class="subsection-header">xG Quality Under Pressure</h3>', unsafe_allow_html=True)
+    
+    fig_violin = go.Figure()
+    
+    for pressure in filtered_df['pressure_label'].unique():
+        pressure_data = filtered_df[filtered_df['pressure_label'] == pressure]
+        color = '#ef4444' if pressure == 'Under Pressure' else '#10b981'
+        
+        fig_violin.add_trace(go.Violin(
+            y=pressure_data['shot.statsbomb_xg'],
+            name=pressure,
+            box_visible=True,
+            meanline_visible=True,
+            fillcolor=color,
+            opacity=0.7,
+            line_color=color
+        ))
+    
+    fig_violin.update_layout(
+        title="",
+        yaxis_title="Expected Goals (xG)",
+        template="plotly_white",
+        height=400,
+        showlegend=False,
+        font=dict(family="Inter", size=12),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)'
+    )
+    
+    st.plotly_chart(fig_violin, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
