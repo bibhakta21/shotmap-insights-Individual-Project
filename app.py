@@ -470,3 +470,57 @@ with cluster_col2:
         hide_index=True
     )
     st.markdown('</div>', unsafe_allow_html=True)
+
+# Interactive zone performance chart
+st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+st.markdown('<h3 class="subsection-header">Zone Efficiency Matrix</h3>', unsafe_allow_html=True)
+
+fig_bubble = px.scatter(
+    summary,
+    x='avg_xg',
+    y='goal_rate',
+    size='shots',
+    color='zone',
+    hover_data={
+        'avg_distance': ':.1f',
+        'shots': True,
+        'goal_rate': ':.1%',
+        'avg_xg': ':.3f'
+    },
+    labels={
+        'avg_xg': 'Average xG per Shot',
+        'goal_rate': 'Goal Conversion Rate',
+        'zone': 'Shot Zone'
+    },
+    color_discrete_sequence=colors
+)
+
+fig_bubble.update_layout(
+    title="",
+    template="plotly_white",
+    height=500,
+    font=dict(family="Inter", size=12),
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    yaxis=dict(tickformat='.1%'),
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.02,
+        xanchor="right",
+        x=1
+    )
+)
+
+fig_bubble.update_traces(
+    marker=dict(
+        line=dict(width=2, color='white'),
+        sizemode='diameter',
+        sizeref=2.*max(summary['shots'])/(40.**2),
+        sizemin=4
+    )
+)
+
+st.plotly_chart(fig_bubble, use_container_width=True)
+st.markdown('</div>', unsafe_allow_html=True)
+
