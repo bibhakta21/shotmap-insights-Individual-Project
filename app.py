@@ -611,3 +611,44 @@ with advanced_col2:
     
     st.plotly_chart(fig_angle, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
+
+# Footer with insights
+st.markdown("---")
+st.markdown('<div class="section-header">💡 Key Insights</div>', unsafe_allow_html=True)
+
+insight_col1, insight_col2, insight_col3 = st.columns(3)
+
+with insight_col1:
+    best_zone = summary.loc[summary['goal_rate'].idxmax(), 'zone']
+    best_rate = summary['goal_rate'].max()
+    st.markdown(f"""
+    <div class="metric-card">
+        <div style="color: #10b981; font-size: 1.1rem; font-weight: 600;">🎯 Most Efficient Zone</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 0.5rem 0;">{best_zone}</div>
+        <div style="color: #64748b;">{best_rate:.1%} conversion rate</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with insight_col2:
+    total_shots = len(filtered_df)
+    high_xg_shots = len(filtered_df[filtered_df['shot.statsbomb_xg'] > 0.3])
+    high_xg_rate = (high_xg_shots / total_shots * 100) if total_shots > 0 else 0
+    st.markdown(f"""
+    <div class="metric-card">
+        <div style="color: #3b82f6; font-size: 1.1rem; font-weight: 600;">⭐ High Quality Shots</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 0.5rem 0;">{high_xg_rate:.1f}%</div>
+        <div style="color: #64748b;">Shots with xG > 0.3</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with insight_col3:
+    pressure_impact = filtered_df.groupby('pressure_label')['shot.statsbomb_xg'].mean()
+    if len(pressure_impact) == 2:
+        impact = ((pressure_impact['Not Under Pressure'] - pressure_impact['Under Pressure']) * 100)
+        st.markdown(f"""
+        <div class="metric-card">
+            <div style="color: #f59e0b; font-size: 1.1rem; font-weight: 600;">⚡ Pressure Impact</div>
+            <div style="font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 0.5rem 0;">{impact:+.1f}%</div>
+            <div style="color: #64748b;">xG difference without pressure</div>
+        </div>
+        """, unsafe_allow_html=True)
