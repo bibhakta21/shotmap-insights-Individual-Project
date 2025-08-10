@@ -127,3 +127,17 @@ st.markdown("""
     
 </style>
 """, unsafe_allow_html=True)
+
+# Main title
+st.markdown('<h1 class="main-title">⚽ Shot Selection Analytics</h1>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle">Advanced football analytics for optimal shot selection and performance optimization</p>', unsafe_allow_html=True)
+
+@st.cache_data
+def load_data():
+    df = pd.read_csv('clean_shots_final.csv')
+    df['is_goal'] = df['shot.outcome.name'].apply(lambda x: 1 if x == 'Goal' else 0)
+    df['distance_to_goal'] = np.sqrt((120 - df['x'])**2 + (40 - df['y'])**2)
+    return df
+
+df = load_data()
+
