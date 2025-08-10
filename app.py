@@ -524,3 +524,90 @@ fig_bubble.update_traces(
 st.plotly_chart(fig_bubble, use_container_width=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
+# Advanced Analytics Section
+st.markdown('<div class="section-header">🔬 Advanced Shot Analytics</div>', unsafe_allow_html=True)
+
+advanced_col1, advanced_col2 = st.columns(2)
+
+with advanced_col1:
+    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+    st.markdown('<h3 class="subsection-header">Shot Quality vs Volume by Team</h3>', unsafe_allow_html=True)
+    
+    if team_filter == "All Teams":
+        team_summary = df.groupby('team.name').agg(
+            avg_xg=('shot.statsbomb_xg', 'mean'),
+            total_shots=('x', 'count'),
+            goals=('is_goal', 'sum')
+        ).reset_index()
+        team_summary['goal_rate'] = team_summary['goals'] / team_summary['total_shots']
+        
+        fig_teams = px.scatter(
+            team_summary.head(20),  # Top 20 teams
+            x='total_shots',
+            y='avg_xg',
+            size='goal_rate',
+            color='goal_rate',
+            hover_name='team.name',
+            color_continuous_scale='RdYlGn',
+            labels={
+                'total_shots': 'Total Shots',
+                'avg_xg': 'Average xG per Shot',
+                'goal_rate': 'Conversion Rate'
+            }
+        )
+        
+        fig_teams.update_layout(
+            title="",
+            template="plotly_white",
+            height=400,
+            font=dict(family="Inter", size=12),
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)'
+        )
+        
+        st.plotly_chart(fig_teams, use_container_width=True)
+    else:
+        st.info("Select 'All Teams' to view team comparison analysis")
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with advanced_col2:
+    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+    st.markdown('<h3 class="subsection-header">Shot Angle Analysis</h3>', unsafe_allow_html=True)
+    
+    # Calculate shot angle
+    filtered_df['shot_angle'] = np.degrees(np.arctan2(
+        abs(filtered_df['y'] - 40), 
+        120 - filtered_df['x']
+    ))
+    
+    fig_angle = px.histogram(
+        filtered_df,
+        x='shot_angle',
+        color='shot.outcome.name',
+        color_discrete_map={
+            'Goal': '#10b981',
+            'Saved': '#3b82f6', 
+            'Blocked': '#f59e0b',
+            'Off T': '#ef4444',
+            'Missed': '#6b7280'
+        },
+        labels={
+            'shot_angle': 'Shot Angle (degrees)',
+            'count': 'Number of Shots'
+        },
+        opacity=0.8
+    )
+    
+    fig_angle.update_layout(
+        title="",
+        template="plotly_white",
+        height=400,
+        font=dict(family="Inter", size=12),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        legend=dict(title="Outcome", title_font_size=12)
+    )
+    
+    st.plotly_chart(fig_angle, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
