@@ -153,11 +153,30 @@ team_filter = st.sidebar.selectbox(
     help="Filter data by specific team or view all teams"
 )
 
-# filter options
+# Additional filter options
 outcome_filter = st.sidebar.multiselect(
     "🎯 Shot Outcomes",
     options=df['shot.outcome.name'].unique(),
     default=df['shot.outcome.name'].unique(),
     help="Filter by shot outcomes"
 )
+
+xg_range = st.sidebar.slider(
+    "📊 xG Range",
+    min_value=0.0,
+    max_value=1.0,
+    value=(0.0, 1.0),
+    step=0.05,
+    help="Filter shots by Expected Goals value"
+)
+
+# Apply filters
+filtered_df = df.copy()
+if team_filter != "All Teams":
+    filtered_df = filtered_df[filtered_df['team.name'] == team_filter]
+filtered_df = filtered_df[filtered_df['shot.outcome.name'].isin(outcome_filter)]
+filtered_df = filtered_df[
+    (filtered_df['shot.statsbomb_xg'] >= xg_range[0]) & 
+    (filtered_df['shot.statsbomb_xg'] <= xg_range[1])
+]
 
