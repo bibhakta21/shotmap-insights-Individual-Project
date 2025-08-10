@@ -227,3 +227,49 @@ with pitch_col2:
     st.pyplot(fig2, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
+# Interactive xG Analysis
+st.markdown('<div class="section-header">📊 Expected Goals (xG) Interactive Analysis</div>', unsafe_allow_html=True)
+
+xg_col1, xg_col2 = st.columns(2)
+
+with xg_col1:
+    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+    st.markdown('<h3 class="subsection-header">xG Distribution by Outcome</h3>', unsafe_allow_html=True)
+    
+    # Interactive box plot with Plotly
+    fig_box = go.Figure()
+    
+    for outcome in filtered_df['shot.outcome.name'].unique():
+        outcome_data = filtered_df[filtered_df['shot.outcome.name'] == outcome]
+        color = {'Goal': '#10b981', 'Saved': '#3b82f6', 'Blocked': '#f59e0b', 
+                'Off T': '#ef4444', 'Missed': '#6b7280'}.get(outcome, '#64748b')
+        
+        fig_box.add_trace(go.Box(
+            y=outcome_data['shot.statsbomb_xg'],
+            name=outcome,
+            marker_color=color,
+            boxpoints='outliers',
+            jitter=0.3,
+            pointpos=-1.8
+        ))
+    
+    fig_box.update_layout(
+        title="",
+        yaxis_title="Expected Goals (xG)",
+        xaxis_title="Shot Outcome",
+        template="plotly_white",
+        height=400,
+        showlegend=False,
+        font=dict(family="Inter", size=12),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)'
+    )
+    
+    st.plotly_chart(fig_box, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with xg_col2:
+    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+    st.markdown('<h3 class="subsection-header">Distance vs xG Relationship</h3>', unsafe_allow_html=True)
+    
+   
