@@ -1,0 +1,8 @@
+matplotlib
+seaborn
+mplsoccer
+plotly
+statsmodels
+pandas
+numpy
+scikit-learn
