@@ -391,3 +391,82 @@ with pressure_col2:
     
     st.plotly_chart(fig_violin, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
+
+# Advanced Clustering Analysis
+st.markdown('<div class="section-header">🎯 Shot Zone Clustering Analysis</div>', unsafe_allow_html=True)
+
+cluster_col1, cluster_col2 = st.columns([3, 2])
+
+# KMeans Clustering
+kmeans = KMeans(n_clusters=5, random_state=42)
+filtered_df['cluster'] = kmeans.fit_predict(filtered_df[['x', 'y']])
+
+with cluster_col1:
+    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+    st.markdown('<h3 class="subsection-header">Shot Location Clusters</h3>', unsafe_allow_html=True)
+    
+    # Enhanced pitch visualization
+    pitch3 = Pitch(pitch_type='statsbomb', pitch_color='#f8fafc', line_color='#334155', linewidth=2)
+    fig3, ax3 = pitch3.draw(figsize=(10, 6))
+    
+    # Use a more sophisticated color palette
+    colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6']
+    
+    for cluster in sorted(filtered_df['cluster'].unique()):
+        cluster_data = filtered_df[filtered_df['cluster'] == cluster]
+        pitch3.scatter(cluster_data['x'], cluster_data['y'], 
+                      color=colors[cluster % len(colors)], 
+                      ax=ax3, s=25, alpha=0.7, 
+                      edgecolors='white', linewidth=0.5,
+                      label=f'Zone {cluster + 1}')
+    
+    # Add cluster centroids
+    centroids = kmeans.cluster_centers_
+    pitch3.scatter(centroids[:, 0], centroids[:, 1], 
+                  color='black', marker='X', s=200, 
+                  edgecolors='white', linewidth=2, ax=ax3,
+                  label='Zone Centers')
+    
+    ax3.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05), 
+              ncol=6, frameon=False, fontsize=10)
+    plt.tight_layout()
+    st.pyplot(fig3, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with cluster_col2:
+    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+    st.markdown('<h3 class="subsection-header">Zone Performance Summary</h3>', unsafe_allow_html=True)
+    
+    # Enhanced cluster summary
+    summary = filtered_df.groupby('cluster').agg(
+        avg_xg=('shot.statsbomb_xg', 'mean'),
+        goal_rate=('is_goal', 'mean'),
+        shots=('x', 'count'),
+        avg_distance=('distance_to_goal', 'mean')
+    ).reset_index()
+    
+    summary['zone'] = 'Zone ' + (summary['cluster'] + 1).astype(str)
+    summary = summary.sort_values(by='goal_rate', ascending=False)
+    
+    # Format for display
+    display_summary = summary[['zone', 'shots', 'goal_rate', 'avg_xg', 'avg_distance']].copy()
+    display_summary['goal_rate'] = (display_summary['goal_rate'] * 100).round(1)
+    display_summary['avg_xg'] = display_summary['avg_xg'].round(3)
+    display_summary['avg_distance'] = display_summary['avg_distance'].round(1)
+    
+    display_summary.columns = ['Zone', 'Shots', 'Goal Rate (%)', 'Avg xG', 'Avg Distance']
+    
+    st.dataframe(
+        display_summary.style.background_gradient(
+            subset=['Goal Rate (%)'], cmap='RdYlGn', vmin=0, vmax=100
+        ).background_gradient(
+            subset=['Avg xG'], cmap='Blues', vmin=0, vmax=1
+        ).format({
+            'Goal Rate (%)': '{:.1f}%',
+            'Avg xG': '{:.3f}',
+            'Avg Distance': '{:.1f}'
+        }),
+        use_container_width=True,
+        hide_index=True
+    )
+    st.markdown('</div>', unsafe_allow_html=True)
