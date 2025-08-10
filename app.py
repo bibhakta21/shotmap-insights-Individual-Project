@@ -652,3 +652,18 @@ with insight_col3:
             <div style="color: #64748b;">xG difference without pressure</div>
         </div>
         """, unsafe_allow_html=True)
+
+# Data export option
+with st.sidebar:
+    st.markdown("---")
+    st.markdown("### 📥 Export Data")
+    
+    if st.button("Download Filtered Data", type="primary", use_container_width=True):
+        csv_data = filtered_df.to_csv(index=False)
+        st.download_button(
+            label="💾 Download CSV",
+            data=csv_data,
+            file_name=f"shot_analysis_{team_filter.lower().replace(' ', '_')}.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
