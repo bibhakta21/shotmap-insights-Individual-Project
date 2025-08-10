@@ -11,14 +11,13 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-# Page configuration
 st.set_page_config(
     layout="wide", 
     page_title="Shot Selection Analytics", 
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for modern styling
+# Custom CSS
 st.markdown("""
 <style>
     /* Import Google Fonts */
@@ -128,7 +127,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Main title
+
 st.markdown('<h1 class="main-title">⚽ Shot Selection Analytics</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">Advanced football analytics for optimal shot selection and performance optimization</p>', unsafe_allow_html=True)
 
@@ -141,7 +140,7 @@ def load_data():
 
 df = load_data()
 
-# Enhanced sidebar with icons and styling
+#sidebar 
 st.sidebar.markdown('<h2 class="sidebar-header">🎯 Dashboard Controls</h2>', unsafe_allow_html=True)
 
 team_list = ["All Teams"] + sorted(df['team.name'].dropna().unique().tolist())
@@ -170,7 +169,7 @@ xg_range = st.sidebar.slider(
     help="Filter shots by Expected Goals value"
 )
 
-# Apply filters
+# Apply filters logic
 filtered_df = df.copy()
 if team_filter != "All Teams":
     filtered_df = filtered_df[filtered_df['team.name'] == team_filter]
@@ -208,11 +207,11 @@ with pitch_col2:
     
     # Enhanced outcome colors
     outcome_styles = {
-        'Saved': ('#3b82f6', 0.6),      # Blue
-        'Blocked': ('#f59e0b', 0.6),     # Orange  
-        'Off T': ('#ef4444', 0.4),       # Red
-        'Missed': ('#6b7280', 0.4),      # Gray
-        'Goal': ('#10b981', 0.9)         # Green
+        'Saved': ('#3b82f6', 0.6),      
+        'Blocked': ('#f59e0b', 0.6),      
+        'Off T': ('#ef4444', 0.4),       
+        'Missed': ('#6b7280', 0.4),      
+        'Goal': ('#10b981', 0.9)         
     }
     
     for outcome, (color, alpha) in outcome_styles.items():
@@ -524,7 +523,7 @@ fig_bubble.update_traces(
 st.plotly_chart(fig_bubble, use_container_width=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
-# Advanced Analytics Section
+# Analytics Section
 st.markdown('<div class="section-header">🔬 Advanced Shot Analytics</div>', unsafe_allow_html=True)
 
 advanced_col1, advanced_col2 = st.columns(2)
@@ -667,3 +666,17 @@ with st.sidebar:
             mime="text/csv",
             use_container_width=True
         )
+
+    # sidebar info
+    st.markdown("---")
+    st.markdown("### ℹ️ Dashboard Info")
+    st.markdown(f"""
+    <div style="background: #f1f5f9; padding: 1rem; border-radius: 8px; font-size: 0.85rem;">
+        <strong>Data Summary:</strong><br>
+        • {len(df):,} total shots in dataset<br>
+        • {len(filtered_df):,} shots after filtering<br>
+        • {len(df['team.name'].unique())} teams analyzed<br>
+        • {len(df['shot.outcome.name'].unique())} outcome types
+    </div>
+    """, unsafe_allow_html=True)
+
