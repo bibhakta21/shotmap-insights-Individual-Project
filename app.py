@@ -133,7 +133,7 @@ st.markdown('<p class="subtitle">Advanced football analytics for optimal shot se
 def load_data():
     try:
         
-        df = pd.read_csv('clean_shots_final_streamlit.csv')
+        df = pd.read_csv('https://media.githubusercontent.com/media/bibhakta21/shotmap-insights-Individual-Project/refs/heads/main/clean_shots_final_streamlit.csv')
 
         
         st.write(" CSV Columns Found:", list(df.columns))
