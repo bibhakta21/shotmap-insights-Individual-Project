@@ -18,15 +18,15 @@ To identify high-value shot zones, reduce poor shot decisions, and provide visua
 
 ## 🛠️ Tools and Technologies Used
 
-| Category         | Tools / Libraries                              |
-|------------------|-------------------------------------------------|
-| Programming      | Python                                          |
-| Data Handling    | pandas, numpy                                   |
-| Visualization    | matplotlib, seaborn, mplsoccer, Plotly          |
-| Machine Learning | scikit-learn (KMeans clustering)                |
-| Dashboard        | Streamlit                                       |
-| Notebook         | Jupyter Notebook                                |
-| Data Format      | JSON (StatsBomb Open Data), CSV                 |
+| Category         | Tools / Libraries                      |
+| ---------------- | -------------------------------------- |
+| Programming      | Python                                 |
+| Data Handling    | pandas, numpy                          |
+| Visualization    | matplotlib, seaborn, mplsoccer, Plotly |
+| Machine Learning | scikit-learn (KMeans clustering)       |
+| Dashboard        | Streamlit                              |
+| Notebook         | Jupyter Notebook                       |
+| Data Format      | JSON (StatsBomb Open Data), CSV        |
 
 ---
 
@@ -43,31 +43,39 @@ To identify high-value shot zones, reduce poor shot decisions, and provide visua
 
 ## 🖼️ Screenshots
 
-![Screenshot 1](assets/1.png)
----
-![Screenshot 2](assets/2.png)
----
-![Screenshot 3](assets/3.png)
----
-![Screenshot 4](assets/4.png)
----
-![Screenshot 5](assets/5.png)
----
-![Screenshot 6](assets/6.png)
----
-![Screenshot 7](assets/7.png)
----
-![Screenshot 8](assets/8.png)
----
-![Screenshot 9](assets/9.png)
----
-![Screenshot 10](assets/10.png)
----
-![Screenshot 11](assets/11.png)
----
-![Screenshot 12](assets/12.png)
----
-![Screenshot 13](assets/13.png)
+## ![Screenshot 1](assets/1.png)
+
+## ![Screenshot 2](assets/2.png)
+
+## ![Screenshot 3](assets/3.png)
+
+## ![Screenshot 4](assets/4.png)
+
+## ![Screenshot 5](assets/5.png)
+
+## ![Screenshot 6](assets/6.png)
+
+## ![Screenshot 7](assets/7.png)
+
+## ![Screenshot 8](assets/8.png)
+
+## ![Screenshot 9](assets/9.png)
+
+## ![Screenshot 10](assets/10.png)
+
+## ![Screenshot 11](assets/dashboard1.png)
+
+## ![Screenshot 12](assets/dashboard2.png)
+
+## ![Screenshot 13](assets/dashboard3.png)
+
+## ![Screenshot 14](assets/dashboard4.png)
+
+## ![Screenshot 15](assets/dashboard5.png)
+
+## ![Screenshot 16](assets/dashboard6.png)
+
+![Screenshot 17](assets/dashboard7.png)
 
 ---
 
@@ -78,4 +86,3 @@ Batch 33, Section C
 Softwarica College of IT and E-Commerce
 
 ---
-
