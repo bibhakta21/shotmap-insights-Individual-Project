@@ -1,6 +1,6 @@
 # ⚽ Football Shot Selection Optimization
 
-This project focuses on improving **shot selection in football** using **data analytics** and **visualization techniques**. By analyzing historical match data—including shot locations, outcomes, and expected goals (xG)—the system helps coaches and analysts make smarter, data-backed decisions to enhance scoring efficiency.
+This project focuses on improving **shot selection in football** using **data analytics** and **visualization techniques**. By analyzing historical match data, including shot locations, outcomes, and expected goals (xG), the system helps coaches and analysts make smarter, data-backed decisions to enhance scoring efficiency.
 
 The project includes a full **Python-based pipeline** for data extraction, cleaning, transformation, exploratory data analysis (EDA), modeling, and dashboard visualization.
 
