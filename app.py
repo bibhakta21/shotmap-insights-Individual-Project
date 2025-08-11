@@ -131,10 +131,31 @@ st.markdown('<p class="subtitle">Advanced football analytics for optimal shot se
 
 @st.cache_data
 def load_data():
-    df = pd.read_csv('clean_shots_final.csv')
-    df['is_goal'] = df['shot.outcome.name'].apply(lambda x: 1 if x == 'Goal' else 0)
-    df['distance_to_goal'] = np.sqrt((120 - df['x'])**2 + (40 - df['y'])**2)
-    return df
+    try:
+        
+        df = pd.read_csv('clean_shots_final.csv')
+
+        
+        st.write(" CSV Columns Found:", list(df.columns))
+        st.write(f"CSV Shape: {df.shape}")
+
+        
+        if 'shot.outcome.name' not in df.columns:
+            st.error("'shot.outcome.name' column not found in CSV. Please check your file.")
+            st.stop()
+
+        # Create derived columns
+        df['is_goal'] = df['shot.outcome.name'].apply(lambda x: 1 if x == 'Goal' else 0)
+        df['distance_to_goal'] = np.sqrt((120 - df['x'])**2 + (40 - df['y'])**2)
+
+        return df
+
+    except FileNotFoundError:
+        st.error("CSV file not found! Ensure 'clean_shots_final.csv' is in the same directory as app.py.")
+        st.stop()
+    except Exception as e:
+        st.error(f"An error occurred while loading the CSV: {e}")
+        st.stop()
 
 df = load_data()
 
