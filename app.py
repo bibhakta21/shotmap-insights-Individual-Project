@@ -135,11 +135,7 @@ def load_data():
         
         df = pd.read_csv('https://media.githubusercontent.com/media/bibhakta21/shotmap-insights-Individual-Project/refs/heads/main/clean_shots_final_streamlit.csv')
 
-        
-        st.write(" CSV Columns Found:", list(df.columns))
-        st.write(f"CSV Shape: {df.shape}")
-
-        
+            
         if 'shot.outcome.name' not in df.columns:
             st.error("'shot.outcome.name' column not found in CSV. Please check your file.")
             st.stop()
